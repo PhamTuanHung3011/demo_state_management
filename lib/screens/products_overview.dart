@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../data_fake/data_product.dart';
 import '../providers/product.dart';
+import '../widget/app_drawer.dart';
 
 enum FilterOption {
   Favorites,
@@ -66,6 +67,7 @@ class _ProductsOverviewScreensState extends State<ProductsOverviewScreens> {
           ),
         ],
       ),
+      drawer: AppDrawer(),
       body: ProductGrid(_showOnlyFavorites),
     );
   }

@@ -6,11 +6,7 @@ import '../providers/cart.dart';
 import '../providers/product.dart';
 
 class ProductItem extends StatelessWidget {
-  // final String id;
-  // final String title;
-  // final String imageUrl;
-  //
-  // ProductItem(this.id, this.title, this.imageUrl);
+
 
   @override
   Widget build(BuildContext context) {
@@ -34,14 +30,15 @@ class ProductItem extends StatelessWidget {
         footer: GridTileBar(
           backgroundColor: Colors.black87,
           leading: Consumer<Product>(
-            builder: (context, product, _) => IconButton(
-                icon: Icon(product.isFavorite
-                    ? Icons.favorite
-                    : Icons.favorite_border),
-                onPressed: () {
-                  product.toggleFavoriteStatus();
-                },
-                color: Colors.deepOrangeAccent),
+            builder: (context, product, _) =>
+                IconButton(
+                    icon: Icon(product.isFavorite
+                        ? Icons.favorite
+                        : Icons.favorite_border),
+                    onPressed: () {
+                      product.toggleFavoriteStatus();
+                    },
+                    color: Colors.deepOrangeAccent),
           ),
           title: Text(
             product.title,
@@ -51,8 +48,22 @@ class ProductItem extends StatelessWidget {
             icon: Icon(Icons.shopping_cart),
             onPressed: () {
               cart.addItem(product.id, product.title, product.price);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  //TODO: hoan thien SnackBar!
+
+                  content: Text('Add to Cart'),
+                  duration: Duration(seconds: 2),
+                  action: SnackBarAction(
+                    label: 'Ce',
+                    onPressed: () {},
+                  ),
+                ),);
             },
-            color: Theme.of(context).colorScheme.secondary,
+            color: Theme
+                .of(context)
+                .colorScheme
+                .secondary,
           ),
         ),
       ),
