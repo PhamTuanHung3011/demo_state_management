@@ -1,5 +1,9 @@
+import 'package:demo_state_management/providers/cart.dart';
+import 'package:demo_state_management/screens/cart_screens.dart';
+import 'package:demo_state_management/widget/badge.dart';
 import 'package:demo_state_management/widget/product_grid.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../data_fake/data_product.dart';
 import '../providers/product.dart';
@@ -35,14 +39,31 @@ class _ProductsOverviewScreensState extends State<ProductsOverviewScreens> {
                   }
                 });
               },
-              icon: Icon(Icons.more_vert),
+              icon: const Icon(Icons.more_vert),
               itemBuilder: (_) => [
                     const PopupMenuItem(
-                        child: Text('Favorites'),
-                        value: FilterOption.Favorites),
+                        value: FilterOption.Favorites,
+                        child: Text('Favorites')),
                     const PopupMenuItem(
-                        child: Text('Show All'), value: FilterOption.All),
+                        value: FilterOption.All, child: Text('Show All')),
                   ]),
+          Consumer<Cart>(
+            builder: (
+              _,
+              cart,
+              ch,
+            ) =>
+                Badge(
+                    child: ch!,
+                    value: cart.itemCount.toString(),
+                    color: Theme.of(context).colorScheme.secondary),
+            child: IconButton(
+              icon: const Icon(Icons.shopping_cart),
+              onPressed: () {
+                Navigator.pushNamed(context, CartScreen.routeName);
+              },
+            ),
+          ),
         ],
       ),
       body: ProductGrid(_showOnlyFavorites),

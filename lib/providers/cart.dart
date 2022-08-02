@@ -15,16 +15,35 @@ class CartItem {
 }
 
 class Cart with ChangeNotifier {
-  late Map<String, CartItem> _items;
+  late Map<String, CartItem> _items ={};
 
   Map<String, CartItem> get items {
     return {..._items};
   }
 
+  int get itemCount {
+    return _items.length;
+  }
+
+  double get totalAmount {
+    double total = 0.0;
+    _items.forEach((key, cartItem) {
+      total += cartItem.price * cartItem.quantity;
+    });
+    return total;
+  }
+
   void addItem(String id, String title, double price) {
     if (_items.containsKey(id)) {
       // neu da ton tai thi cong them
-      _items.update(id, (exitsCartItem) => CartItem(id: exitsCartItem.id, title: exitsCartItem.title,quantity: exitsCartItem.quantity, price: exitsCartItem.price, ));
+      _items.update(
+          id,
+          (existingCartItem) => CartItem(
+                id: existingCartItem.id,
+                title: existingCartItem.title,
+                quantity: existingCartItem.quantity + 1,
+                price: existingCartItem.price,
+              ));
     } else {
       _items.putIfAbsent(
           id,
@@ -34,5 +53,17 @@ class Cart with ChangeNotifier {
               quantity: 1,
               price: price));
     }
+    notifyListeners();
   }
+
+  void removeItem(String id) {
+    _items.remove(id);
+    notifyListeners();
+  }
+
+  void clear() {
+    _items = {};
+    notifyListeners();
+}
+
 }

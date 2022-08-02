@@ -22,6 +22,9 @@ class ProductGrid extends StatelessWidget {
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
       ),
+      // nen su dung ChangeNotifierProvider.value vi
+      // no tu dong xoa du lieu khi khong can thiet
+      // khac phuc loi tran du lieu.
       itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
           // create: (ctx) => product[i],
         value: product[i],
