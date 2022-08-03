@@ -1,5 +1,8 @@
 import 'package:demo_state_management/screens/edit_product_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/product_provider.dart';
 
 class UserProductsItem extends StatelessWidget {
   final String id;
@@ -26,13 +29,16 @@ class UserProductsItem extends StatelessWidget {
           children: <Widget>[
             IconButton(
               onPressed: () {
-                Navigator.pushReplacementNamed(context, EditProductScreen.routeName, arguments: id);
+                Navigator.pushNamed(context, EditProductScreen.routeName, arguments: id);
               },
               icon: Icon(Icons.edit),
               color: Theme.of(context).primaryColor,
             ),
             IconButton(
-              onPressed: () {},
+              //TODO: cho user lua chon xoa hoac ko? su dung Dismissible
+              onPressed: () {
+                Provider.of<ProductProvider>(context, listen: false).deleteProduct(id);
+              },
               icon: Icon(Icons.delete),
               color: Theme.of(context).errorColor,
             ),
