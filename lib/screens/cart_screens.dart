@@ -15,7 +15,7 @@ class CartScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('CartScreen'),
+        title: const Text('CartScreen'),
       ),
       body: Column(
         children: [
@@ -30,7 +30,7 @@ class CartScreen extends StatelessWidget {
                     'Totals',
                     style: TextStyle(fontSize: 20),
                   ),
-                  Divider(),
+                  const Divider(),
                   Chip(
                     label: Text(
                       '\$${cart.totalAmount.toStringAsFixed(2)}',
