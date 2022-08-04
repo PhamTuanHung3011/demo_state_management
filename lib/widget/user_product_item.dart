@@ -22,23 +22,49 @@ class UserProductsItem extends StatelessWidget {
       leading: CircleAvatar(
         backgroundImage: NetworkImage(imageUrl),
       ),
-
       trailing: Container(
         width: 100.0,
         child: Row(
           children: <Widget>[
             IconButton(
               onPressed: () {
-                Navigator.pushNamed(context, EditProductScreen.routeName, arguments: id);
+                Navigator.pushNamed(context, EditProductScreen.routeName,
+                    arguments: id);
               },
               icon: Icon(Icons.edit),
               color: Theme.of(context).primaryColor,
             ),
             IconButton(
               //TODO: cho user lua chon xoa hoac ko? su dung Dismissible
-              onPressed: () {
-                Provider.of<ProductProvider>(context, listen: false).deleteProduct(id);
-              },
+// da hoan thien boc showDialog trong nut delete
+              onPressed: () => showDialog(
+                context: context,
+                builder: (_) => AlertDialog(
+                  title: Text('Are your sure?'),
+                  content: Text('Delete a product?'),
+                  actions: [
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(false);
+                        },
+                        child: Text('NO')),
+                    ElevatedButton(
+                        onPressed: () {
+                          Provider.of<ProductProvider>(context, listen: false)
+                              .deleteProduct(id);
+                          Navigator.of(context).pop(true);
+                        },
+                        child: Text('YES')),
+                  ],
+                  elevation: 10.0,
+                  backgroundColor: Colors.blueGrey,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    side: BorderSide(color: Colors.white24),
+                  ),
+                ),
+                barrierDismissible: false,
+              ),
               icon: Icon(Icons.delete),
               color: Theme.of(context).errorColor,
             ),
