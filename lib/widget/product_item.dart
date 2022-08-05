@@ -1,11 +1,16 @@
+
+
 import 'package:demo_state_management/screens/products_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 
 import '../providers/cart.dart';
 import '../providers/product.dart';
 
 class ProductItem extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
@@ -21,6 +26,7 @@ class ProductItem extends StatelessWidget {
                     ? Icons.favorite
                     : Icons.favorite_border),
                 onPressed: () {
+
                   product.toggleFavoriteStatus();
                 },
                 color: Colors.deepOrangeAccent),

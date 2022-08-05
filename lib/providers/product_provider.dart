@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -6,7 +7,7 @@ import '../data_fake/data_product.dart';
 import 'product.dart';
 
 class ProductProvider with ChangeNotifier {
-   List<Product> _items = [];
+  List<Product> _items = [];
 
   List<Product> get items {
     return [..._items];
@@ -24,14 +25,13 @@ class ProductProvider with ChangeNotifier {
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       final List<Product> loadedProducts = [];
       extractedData.forEach((prodId, prodData) {
-        loadedProducts.add(Product (
+        loadedProducts.add(Product(
           id: prodId,
           title: prodData['title'],
           description: prodData['description'],
           price: prodData['price'],
           imageUrl: prodData['imageUrl'],
           isFavorite: prodData['isFavorite'],
-
         ));
       });
       _items = loadedProducts;
@@ -67,27 +67,47 @@ class ProductProvider with ChangeNotifier {
     } catch (error) {
       rethrow;
     }
-
     // dang xu ly sync, ham post chay xong, goi lai then() xem co response ko
     // neu co moi xu ly tiep
+  }
 
-    // _items.add(newProduct);
+  Future<void> updateProduct(String id, Product newProduct) async {
+    final prodIndex = _items.indexWhere((prod) => prod.id == id);
+    if (prodIndex >= 0) {
+      final url = Uri.parse(
+          'https://demovinhdeptrai-default-rtdb.firebaseio.com/products/$id.json');
+      try {
+        await http.patch(url,
+            body: json.encode({
+              'title': newProduct.title,
+              'price': newProduct.price,
+              'description': newProduct.description,
+              'imageUrl': newProduct.imageUrl,
+            }));
+        _items[prodIndex] = newProduct;
+        notifyListeners();
+      } catch (error) {
+        rethrow;
+      }
+    }
+  }
+
+  Future<void> deleteProduct(String id) async {
+    final url = Uri.parse(
+        'https://demovinhdeptrai-default-rtdb.firebaseio.com/products/$id.json');
+    final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
+    var existingProduct = _items[existingProductIndex];
+    _items.removeAt(existingProductIndex);
+    notifyListeners();
+
+    final response = await http.delete(url);
+    if (response.statusCode >= 400) {
+      _items.insert(existingProductIndex, existingProduct);
+      throw HttpException('Could not delete product');
+    }
   }
 
   Product findById(String id) {
     return _items.firstWhere((element) => element.id == id);
-  }
-
-  void updateProduct(String id, Product newProduct) {
-    final prodIndex = _items.indexWhere((prod) => prod.id == id);
-    if (prodIndex >= 0) {
-      _items[prodIndex] = newProduct;
-      notifyListeners();
-    }
-  }
-
-  void deleteProduct(String id) {
-    _items.removeWhere((prod) => prod.id == id);
-    notifyListeners();
   }
 }

@@ -52,16 +52,37 @@ class _EditProductScreenState extends State<EditProductScreen> {
     //if(_editProduct..id != null) cai nay luc nao cung dung cho nen cho chi
     // chay vao edit, phai check xem no co isNotEmpty hay ko?
     if (_editProduct.id.isNotEmpty) {
-      Provider.of<ProductProvider>(context, listen: false)
-          .updateProduct(_editProduct.id, _editProduct);
-      setState(() {
-        _isLoading = false;
-      });
-      Navigator.of(context).pop();
+      try {
+        await Provider.of<ProductProvider>(context, listen: false)
+            .updateProduct(_editProduct.id, _editProduct);
+        setState(() {
+          _isLoading = false;
+        });
+        Navigator.of(context).pop();
+      }
+      catch(error) {
+        await showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: const Text('An error occurred!'),
+              content: const Text('Something went wrong!!!'),
+              actions: [
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(ctx);
+                    },
+                    child: const Text('OK')),
+              ],
+            ));
+      }
+
+
+
     } else {
       try {
         await Provider.of<ProductProvider>(context, listen: false)
             .addProduct(_editProduct);
+        Navigator.of(context).pop();
       } catch (error) {
         await showDialog(
             context: context,
@@ -71,19 +92,17 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   actions: [
                     ElevatedButton(
                         onPressed: () {
-
                           Navigator.pop(ctx);
                         },
                         child: const Text('OK')),
                   ],
                 ));
-      } finally {
-        setState(() {
-          _isLoading = false;
-        });
-        Navigator.of(context).pop();
       }
     }
+    setState(() {
+      _isLoading = false;
+    });
+    // Navigator.of(context).pop();
   }
 
   @override
@@ -114,7 +133,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
         title: const Text('EditScreens'),
         actions: <Widget>[
           IconButton(
-              onPressed: _saveForm, icon: const Icon(Icons.safety_check_outlined))
+              onPressed: _saveForm,
+              icon: const Icon(Icons.safety_check_outlined))
         ],
       ),
       body: _isLoading
