@@ -23,7 +23,12 @@ class ProductProvider with ChangeNotifier {
           'https://demovinhdeptrai-default-rtdb.firebaseio.com/products.json');
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      //TODO: xu ly viec du lieu bi null.
+      if(extractedData.isEmpty) {
+        return;
+      }
       final List<Product> loadedProducts = [];
+
       extractedData.forEach((prodId, prodData) {
         loadedProducts.add(Product(
           id: prodId,
@@ -105,6 +110,7 @@ class ProductProvider with ChangeNotifier {
       _items.insert(existingProductIndex, existingProduct);
       throw HttpException('Could not delete product');
     }
+
   }
 
   Product findById(String id) {
