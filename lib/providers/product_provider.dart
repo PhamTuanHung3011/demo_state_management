@@ -29,7 +29,7 @@ class ProductProvider with ChangeNotifier {
   Future<void> fetchAndSetProducts() async {
     try {
       var url = Uri.parse(
-          'https://demovinhdeptrai-default-rtdb.firebaseio.com/products.json?auth=$authToken');
+          'https://demovinhdeptrai-default-rtdb.firebaseio.com/products.json?auth=$authToken&orderBy="creatorId"&equalTo="$userId"');
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       //TODO: xu ly viec du lieu bi null.
@@ -67,12 +67,12 @@ class ProductProvider with ChangeNotifier {
     try {
       final response = await http.post(url,
           body: json.encode({
-            'id': DateTime.now().toString(),
             'title': product.title,
             'price': product.price,
             'description': product.description,
             'imageUrl': product.imageUrl,
             'isFavorite': product.isFavorite,
+            'creatorId': userId,
           }));
       final newProduct = Product(
           id: json.decode(response.body)['name'],
