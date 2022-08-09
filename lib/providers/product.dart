@@ -25,17 +25,17 @@ class Product with ChangeNotifier {
     isFavorite = newValue;
   }
 
-  Future<void> toggleFavoriteStatus() async {
+  Future<void> toggleFavoriteStatus(String authToken, String idUser) async {
     bool oldStatus = isFavorite;
     isFavorite = !isFavorite;
 
     final url = Uri.parse(
-        'https://demovinhdeptrai-default-rtdb.firebaseio.com/products/$id.json');
+        'https://demovinhdeptrai-default-rtdb.firebaseio.com/userFavorites/$idUser/$id.json?auth=$authToken');
     try {
-      final response = await http.patch(url,
-          body: json.encode({
-            'isFavorite': isFavorite,
-          }));
+      final response = await http.put(url,
+          body: json.encode(
+            isFavorite,
+          ));
       if (response.statusCode >= 400) {
         _setFavValue(oldStatus);
          throw HttpException('Favorites not checked');

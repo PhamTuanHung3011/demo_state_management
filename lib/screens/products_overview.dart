@@ -24,15 +24,11 @@ class ProductsOverviewScreens extends StatefulWidget {
 class _ProductsOverviewScreensState extends State<ProductsOverviewScreens> {
   bool _showOnlyFavorites = false;
 
-  // final List<Product> loadedProducts = [];
   bool _isInit = true;
   bool _isLoading = false;
 
   @override
   void initState() {
-    // Future.delayed(Duration.zero).then((_) {
-    //   Provider.of<ProductProvider>(context).fetchAndSetProducts();
-    // });
     super.initState();
   }
 

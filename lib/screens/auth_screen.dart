@@ -1,9 +1,10 @@
-import 'dart:io';
+
 import 'dart:math';
 
 import 'package:demo_state_management/providers/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:demo_state_management/exceptionHandle/http_exception.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -99,6 +100,22 @@ class _AuthCardState extends State<AuthCard> {
   var _isLoading = false;
   final _passwordController = TextEditingController();
 
+  void _showErrorDialog(String mess) {
+    showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title:  Text('An Error Occurred'),
+          content: Text(mess),
+          actions: <Widget>[
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child:  Text('OK'))
+          ],
+        ));
+  }
+
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) {
       // Invalid!
@@ -108,10 +125,10 @@ class _AuthCardState extends State<AuthCard> {
     setState(() {
       _isLoading = true;
     });
-    try{
+    try {
       if (_authMode == AuthMode.Login) {
         // Log user in
-        await Provider.of<Auth>(context,listen: false)
+        await Provider.of<Auth>(context, listen: false)
             .login(_authData['email']!, _authData['password']!);
       } else {
         // Sign user up
@@ -119,22 +136,34 @@ class _AuthCardState extends State<AuthCard> {
             .signup(_authData['email']!, _authData['password']!);
       }
       //TODO: trien khai them phan try catch.
-    } on HttpException catch(error) {
-      var mess = 'Authenticate failed';
-      switch (error.toString()) {
-
+    } on HttpException catch (error) {
+      var errorsMess = 'Authenticate failed';
+      if (error.toString().contains('EMAIL_EXISTS')) {
+        errorsMess = 'this email address is already in use';
+      } else if (error.toString().contains('INVALID_EMAIL')) {
+        errorsMess = 'this is not avalid email address';
+      } else if (error.toString().contains('WEAK_PASSWORD')) {
+        errorsMess = 'This password is  to week';
+      } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
+        errorsMess = 'Email not found, try again';
+      } else if (error.toString().contains('INVALID_PASSWORD')) {
+        errorsMess = 'This password is not valid, try again';
       }
+      else if (error.toString().contains('TOO_MANY_ATTEMPTS_TRY_LATER')) {
+        errorsMess = ' Access to this account has been temporarily disabled due to many failed login, Plz wait!!!';
+      }
+      _showErrorDialog(errorsMess);
     } catch (error) {
       var errorsMess = 'Could not authenticate, try again';
+      _showErrorDialog(errorsMess);
     }
-
-
-
 
     setState(() {
       _isLoading = false;
     });
   }
+
+
 
   void _switchAuthMode() {
     if (_authMode == AuthMode.Login) {
@@ -189,6 +218,7 @@ class _AuthCardState extends State<AuthCard> {
                     if (value!.isEmpty || value.length < 5) {
                       return 'Password is too short!';
                     }
+                    return null;
                   },
                   onSaved: (value) {
                     _authData['password'] = value!;
