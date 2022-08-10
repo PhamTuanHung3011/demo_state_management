@@ -26,10 +26,12 @@ class ProductProvider with ChangeNotifier {
     return _items.where((element) => element.isFavorite == true).toList();
   }
 
-  Future<void> fetchAndSetProducts() async {
+  Future<void> fetchAndSetProducts([bool filterByUser = false]) async {
+    String filterString = filterByUser ?  'orderBy="creatorId"&equalTo="$userId"' : '' ;
+
     try {
       var url = Uri.parse(
-          'https://demovinhdeptrai-default-rtdb.firebaseio.com/products.json?auth=$authToken&orderBy="creatorId"&equalTo="$userId"');
+          'https://demovinhdeptrai-default-rtdb.firebaseio.com/products.json?auth=$authToken&$filterString');
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       //TODO: xu ly viec du lieu bi null.
