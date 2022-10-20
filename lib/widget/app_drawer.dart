@@ -1,5 +1,3 @@
-
-
 import 'package:demo_state_management/providers/auth.dart';
 import 'package:demo_state_management/screens/orders_screen.dart';
 import 'package:demo_state_management/screens/user_products_screens.dart';
@@ -47,9 +45,8 @@ class AppDrawer extends StatelessWidget {
             leading: Icon(Icons.login_outlined),
             title: Text('Log out'),
             onTap: () {
-
               Provider.of<Auth>(context, listen: false).logout();
-              Navigator.pushReplacementNamed(context, '/');
+              Navigator.of(context).pushNamed('/');
             },
           ),
         ],

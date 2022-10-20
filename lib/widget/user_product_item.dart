@@ -64,13 +64,15 @@ class UserProductsItem extends StatelessWidget {
                             await Provider.of<ProductProvider>(context,
                                     listen: false)
                                 .deleteProduct(id);
-                            scaffoldMess.showSnackBar(const SnackBar(
-                              content: Text(
-                                'Delete DONE!',
-                                textAlign: TextAlign.center,
+                            scaffoldMess.showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'Delete DONE!',
+                                  textAlign: TextAlign.center,
+                                ),
+                                duration: Duration(seconds: 2),
                               ),
-                              duration: Duration(seconds: 2),
-                            ),);
+                            );
                           } catch (error) {
                             scaffoldMess.showSnackBar(
                               const SnackBar(

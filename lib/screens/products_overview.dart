@@ -27,19 +27,20 @@ class _ProductsOverviewScreensState extends State<ProductsOverviewScreens> {
   bool _isInit = true;
   bool _isLoading = false;
 
+
   @override
   void initState() {
     super.initState();
   }
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies()  {
     if (_isInit) {
       setState(() {
         _isLoading = true;
       });
 
-      Provider.of<ProductProvider>(context).fetchAndSetProducts().then((_) {
+       Provider.of<ProductProvider>(context).fetchAndSetProducts().then((_) {
         setState(() {
           _isLoading = false;
         });

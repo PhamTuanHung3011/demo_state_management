@@ -30,7 +30,7 @@ class Product with ChangeNotifier {
     isFavorite = !isFavorite;
 
     final url = Uri.parse(
-        'https://demovinhdeptrai-default-rtdb.firebaseio.com/userFavorites/$idUser/$id.json?auth=$authToken');
+        'https://demostatem-default-rtdb.asia-southeast1.firebasedatabase.app/userFavorites/$idUser/$id.json?auth=$authToken');
     try {
       final response = await http.put(url,
           body: json.encode(
@@ -38,7 +38,7 @@ class Product with ChangeNotifier {
           ));
       if (response.statusCode >= 400) {
         _setFavValue(oldStatus);
-         throw HttpException('Favorites not checked');
+         throw const HttpException('Favorites not checked');
       }
     } catch (error) {
       _setFavValue(oldStatus);

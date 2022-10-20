@@ -33,15 +33,15 @@ class UserProductsScreen extends StatelessWidget {
         drawer: const AppDrawer(),
         body: FutureBuilder(
           future: refreshProducts(context),
-          builder: (context, snapshot) => snapshot.connectionState ==
+          builder: (ctx, snapshot) => snapshot.connectionState ==
                   ConnectionState.waiting
               ? Center(
                   child: CircularProgressIndicator(),
                 )
               : RefreshIndicator(
-                  onRefresh: () => refreshProducts(context),
+                  onRefresh: () => refreshProducts(ctx),
                   child: Consumer<ProductProvider>(
-                    builder: (context , userProducts, _ )
+                    builder: (ctx , userProducts, _)
                     => Padding(
                       padding:
                           EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
